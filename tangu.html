@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마음탐구연구소 — 탐구의 장</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1714;
+    --stone: #3d3830;
+    --ash: #7a7269;
+    --mist: #b8b0a6;
+    --fog: #e8e2db;
+    --paper: #f5f1ec;
+    --cream: #faf7f3;
+    --warm-white: #fefdfc;
+    --accent: #8b6f47;
+    --accent-light: #c4a882;
+    --gold: #c9a84c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+    line-height: 1.8;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  .serif { font-family: 'Noto Serif KR', serif; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: multiply;
+  }
+  .logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--stone);
+    text-decoration: none;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.5s forwards;
+  }
+  .nav-cta {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-light);
+    padding-bottom: 2px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.7s forwards;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .nav-cta:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 64px 80px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: slideUp 0.8s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: slideUp 0.8s ease 0.5s forwards;
+  }
+  .hero-title strong { font-weight: 600; display: block; }
+  .hero-title em { font-style: normal; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--ash);
+    line-height: 1.9;
+    max-width: 380px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: slideUp 0.8s ease 0.7s forwards;
+  }
+
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--ink);
+    color: var(--cream);
+    text-decoration: none;
+    padding: 16px 36px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    transition: background 0.3s, transform 0.2s;
+    opacity: 0;
+    animation: slideUp 0.8s ease 0.9s forwards;
+    width: fit-content;
+  }
+  .hero-btn:hover { background: var(--accent); transform: translateY(-1px); }
+  .hero-btn svg { width: 16px; height: 16px; transition: transform 0.3s; }
+  .hero-btn:hover svg { transform: translateX(4px); }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeIn 1.2s ease 0.4s forwards;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #e8ddd0 0%, #d4c8b8 40%, #c9bba8 100%);
+  }
+
+  .hero-info-cards {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 40px;
+  }
+
+  .hero-info-card {
+    background: rgba(250,247,243,0.85);
+    backdrop-filter: blur(4px);
+    padding: 18px 28px;
+    width: 100%;
+    max-width: 300px;
+    border-left: 3px solid var(--accent);
+  }
+  .hic-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .hic-value {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 120px 0; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 80px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .section-title strong { font-weight: 600; }
+
+  /* ── FEATURES ── */
+  .features {
+    background: var(--warm-white);
+  }
+
+  .features-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .features-left p {
+    font-size: 15px;
+    color: var(--ash);
+    line-height: 2;
+    margin-top: 20px;
+  }
+
+  .features-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .feature-item {
+    background: var(--paper);
+    padding: 28px 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    transition: background 0.3s;
+  }
+  .feature-item:hover { background: var(--fog); }
+
+  .fi-icon {
+    font-size: 20px;
+    min-width: 28px;
+    padding-top: 2px;
+  }
+  .fi-body {}
+  .fi-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .fi-desc {
+    font-size: 13px;
+    color: var(--ash);
+    line-height: 1.7;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how {
+    background: var(--cream);
+  }
+
+  .how-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+
+  .how-card {
+    background: var(--paper);
+    padding: 48px 40px;
+    border-top: 3px solid var(--accent);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .how-card-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 100px;
+    font-weight: 300;
+    color: var(--accent);
+    opacity: 0.06;
+    position: absolute;
+    top: 0; right: 16px;
+    line-height: 1;
+  }
+
+  .how-tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent-light);
+    padding: 4px 10px;
+    margin-bottom: 16px;
+  }
+
+  .how-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .how-limit {
+    font-size: 12px;
+    color: var(--accent-light);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .how-desc {
+    font-size: 14px;
+    color: var(--ash);
+    line-height: 1.9;
+  }
+
+  /* ── CURRICULUM ── */
+  .curriculum {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .curriculum .section-label { color: var(--accent-light); }
+  .curriculum .section-title { color: var(--cream); margin-bottom: 16px; }
+
+  .curriculum-sub {
+    font-size: 15px;
+    color: var(--mist);
+    margin-bottom: 72px;
+    line-height: 1.8;
+  }
+
+  .curriculum-flow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 72px;
+    flex-wrap: wrap;
+  }
+
+  .flow-item {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 24px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    color: var(--cream);
+  }
+
+  .flow-arrow {
+    color: var(--accent-light);
+    font-size: 18px;
+  }
+
+  .curriculum-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .curr-card {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .curr-card-bg {
+    position: absolute;
+    top: 0; right: 0;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 120px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    padding: 10px 20px;
+  }
+
+  .curr-step {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 12px;
+  }
+
+  .curr-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .curr-subtitle {
+    font-size: 13px;
+    color: var(--mist);
+    margin-bottom: 32px;
+  }
+
+  /* TABLE */
+  .curr-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 32px;
+  }
+  .curr-table th {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mist);
+    text-align: left;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-weight: 400;
+  }
+  .curr-table td {
+    font-size: 13px;
+    color: var(--cream);
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    vertical-align: top;
+    line-height: 1.7;
+  }
+  .curr-table td:first-child {
+    color: var(--accent-light);
+    min-width: 60px;
+    font-family: 'Noto Serif KR', serif;
+  }
+  .curr-table td:nth-child(2) {
+    min-width: 140px;
+    padding-right: 16px;
+  }
+  .curr-table td:last-child {
+    color: var(--mist);
+    font-size: 12px;
+  }
+
+  .curr-features {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .curr-feature {
+    font-size: 13px;
+    color: var(--mist);
+    display: flex;
+    gap: 10px;
+  }
+  .curr-feature::before {
+    content: '—';
+    color: var(--accent-light);
+    flex-shrink: 0;
+  }
+
+  .curr-footer {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .curr-provides {
+    font-size: 12px;
+    color: var(--mist);
+    line-height: 2;
+  }
+
+  .curr-price {
+    text-align: right;
+  }
+  .curr-price-label {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .curr-price-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--cream);
+  }
+  .curr-price-unit {
+    font-size: 14px;
+    color: var(--mist);
+    margin-left: 4px;
+  }
+
+  /* ── GUIDE ── */
+  .guide {
+    background: var(--paper);
+  }
+
+  .guide-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .guide-text {}
+  .guide-text p {
+    font-size: 15px;
+    color: var(--ash);
+    line-height: 2;
+    margin-top: 20px;
+  }
+
+  .guide-card {
+    background: var(--cream);
+    border: 1px solid var(--fog);
+    padding: 48px 40px;
+  }
+
+  .guide-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    color: white;
+    margin-bottom: 20px;
+  }
+
+  .guide-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .guide-role {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .guide-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .guide-item {
+    font-size: 14px;
+    color: var(--ash);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--fog);
+    display: flex;
+    gap: 12px;
+    line-height: 1.7;
+  }
+  .guide-item:last-child { border-bottom: none; }
+  .guide-item::before {
+    content: '·';
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+
+  /* ── RECOMMEND ── */
+  .recommend {
+    background: var(--warm-white);
+  }
+
+  .recommend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 48px;
+  }
+
+  .rec-card {
+    background: var(--paper);
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .rec-card:hover { background: var(--fog); }
+
+  .rec-card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+
+  .rec-if {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .rec-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .rec-arrow {
+    font-size: 13px;
+    color: var(--ash);
+  }
+  .rec-arrow strong {
+    color: var(--accent);
+  }
+
+  /* ── HOW TO APPLY ── */
+  .apply {
+    background: var(--cream);
+  }
+
+  .apply-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 48px;
+    max-width: 600px;
+  }
+
+  .apply-step {
+    display: flex;
+    gap: 28px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--fog);
+    position: relative;
+    overflow: hidden;
+    transition: padding-left 0.3s;
+  }
+  .apply-step:first-child { border-top: 1px solid var(--fog); }
+  .apply-step:hover { padding-left: 10px; }
+  .apply-step:hover .as-accent { width: 3px; }
+
+  .as-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+
+  .as-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--fog);
+    min-width: 36px;
+    line-height: 1.2;
+  }
+
+  .as-body {}
+  .as-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .as-desc {
+    font-size: 13px;
+    color: var(--ash);
+    line-height: 1.8;
+  }
+
+  /* ── CTA ── */
+  .cta {
+    background: linear-gradient(160deg, #2c2822 0%, #1a1714 50%, #232018 100%);
+    color: var(--cream);
+    padding: 140px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta::before {
+    content: '場';
+    position: absolute;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 600px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.02);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .cta-inner { position: relative; z-index: 2; }
+  .cta .section-label { color: var(--accent-light); margin-bottom: 24px; }
+
+  .cta-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--cream);
+    margin-bottom: 20px;
+  }
+  .cta-title strong { font-weight: 600; color: #e8d8c4; }
+
+  .cta-sub {
+    font-size: 16px;
+    color: var(--mist);
+    line-height: 1.9;
+    max-width: 480px;
+    margin: 0 auto 56px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--accent);
+    color: var(--cream);
+    text-decoration: none;
+    padding: 20px 52px;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    margin-bottom: 20px;
+  }
+  .cta-btn:hover {
+    background: #a07848;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(139,111,71,0.3);
+  }
+  .cta-note {
+    font-size: 12px;
+    color: var(--ash);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--ash);
+    padding: 48px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+  .footer-logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    color: var(--fog);
+    font-weight: 400;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 100px 40px 60px; }
+    .hero-right { height: 360px; }
+    .container { padding: 0 40px; }
+    .features-inner,
+    .how-inner,
+    .curriculum-grid,
+    .guide-inner,
+    .recommend-grid { grid-template-columns: 1fr; gap: 40px; }
+    nav { padding: 20px 32px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; padding: 40px; }
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 24px; }
+    section { padding: 80px 0; }
+    .curr-footer { flex-direction: column; gap: 16px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo serif">마음탐구연구소</a>
+  <a href="#cta" class="nav-cta">참가 신청하기 →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">탐구의 장</p>
+    <h1 class="hero-title serif">
+      마음탐구자로<br>
+      <strong>나아가는 삶으로</strong><br>
+      <em>안내합니다</em>
+    </h1>
+    <p class="hero-sub">
+      Zoom 기반 온라인 탐구 공간<br>
+      마음탐구 안내자와 함께<br>
+      마음의 능력을 스스로 발견해 나갑니다
+    </p>
+    <a href="#cta" class="hero-btn">
+      참가 신청하기
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 8h10M9 4l4 4-4 4"/>
+      </svg>
+    </a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-bg"></div>
+    <div class="hero-info-cards">
+      <div class="hero-info-card">
+        <div class="hic-label">운영 일정</div>
+        <div class="hic-value serif">매주 화·수·목·일<br>20:00 – 23:00</div>
+      </div>
+      <div class="hero-info-card">
+        <div class="hic-label">참여 방법</div>
+        <div class="hic-value serif">Zoom 자유 출입<br>예약 불필요</div>
+      </div>
+      <div class="hero-info-card">
+        <div class="hic-label">월 회비</div>
+        <div class="hic-value serif">30,000원</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="container">
+    <div class="features-inner">
+      <div class="reveal">
+        <p class="section-label">탐구의 장 특징</p>
+        <h2 class="section-title serif">오롯이<br><strong>나를 위한 시간</strong></h2>
+        <p>타인과의 비교 없이, 내 속도에 맞춰 마음을 탐구합니다<br>집이나 카페 등 편안한 환경에서 자유롭게 참여할 수 있습니다</p>
+      </div>
+      <div class="features-grid reveal reveal-delay-2">
+        <div class="feature-item">
+          <div class="fi-icon">🪞</div>
+          <div class="fi-body">
+            <div class="fi-title">타인과의 비교 없이</div>
+            <div class="fi-desc">오롯이 나 자신을 위한 탐구 시간입니다.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🌱</div>
+          <div class="fi-body">
+            <div class="fi-title">내 속도에 맞춘 개인 안내</div>
+            <div class="fi-desc">각자의 탐구 속도에 맞춰 1:1로 안내받습니다.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🚪</div>
+          <div class="fi-body">
+            <div class="fi-title">자유로운 출입</div>
+            <div class="fi-desc">예약 없이 운영 시간에 자유롭게 Zoom에 입장합니다.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🏡</div>
+          <div class="fi-body">
+            <div class="fi-title">편안한 환경</div>
+            <div class="fi-desc">집, 카페 등 익숙하고 편한 공간에서 접속합니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:60px;">
+      <p class="section-label">진행 방식</p>
+      <h2 class="section-title serif">안내자와 함께하는<br><strong>두 가지 시간</strong></h2>
+    </div>
+    <div class="how-inner">
+      <div class="how-card reveal reveal-delay-1">
+        <div class="how-card-num">1</div>
+        <div class="how-tag">주 1회 한정 · 30분</div>
+        <div class="how-title serif">개인 지도</div>
+        <div class="how-limit">1:1 맞춤 안내</div>
+        <div class="how-desc">마음의 움직임을 1:1로 배우게 됩니다<br>이를 명상을 통해 직접 알아가는 시간을 가지게 됩니다</div>
+      </div>
+      <div class="how-card reveal reveal-delay-2">
+        <div class="how-card-num">2</div>
+        <div class="how-tag">주 2회 한정 · 10분</div>
+        <div class="how-title serif">개인 면담</div>
+        <div class="how-limit">1:1 탐구 나눔</div>
+        <div class="how-desc">탐구 과정에서 생긴 의문이나 경험을 함께 나누게 됩니다</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRICULUM -->
+<section class="curriculum">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">콘텐츠 구성</p>
+      <h2 class="section-title serif">두 가지 콘텐츠로<br><strong>단계적으로 나아갑니다</strong></h2>
+      <p class="curriculum-sub">콘텐츠는 순서대로 진행됩니다.</p>
+    </div>
+    <div class="curriculum-flow reveal reveal-delay-1">
+      <div class="flow-item serif">마음의 움직임 기초</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item serif">마음의 움직임 심화</div>
+    </div>
+    <div class="curriculum-grid">
+
+      <!-- 기초 -->
+      <div class="curr-card reveal reveal-delay-1">
+        <div class="curr-card-bg">基</div>
+        <div class="curr-step">콘텐츠 1</div>
+        <div class="curr-title serif">마음의 움직임 기초</div>
+        <div class="curr-subtitle">감각 기반 알아차림</div>
+
+        <table class="curr-table">
+          <thead>
+            <tr>
+              <th>회차</th>
+              <th>주제</th>
+              <th>세부 내용</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1회</td>
+              <td>불현듯이 나타나는 자극</td>
+              <td>자극의 나타남<br>호흡 명상</td>
+            </tr>
+            <tr>
+              <td>2회</td>
+              <td>자극에 정신을 빼앗기다</td>
+              <td>자극에 의한 반응<br>호흡 명상</td>
+            </tr>
+            <tr>
+              <td>3회</td>
+              <td>스스로 존재감을 드러내는 자극</td>
+              <td>자극의 존재감<br>호흡 명상</td>
+            </tr>
+            <tr>
+              <td>4회</td>
+              <td>자극이 느껴지고 있음을 자각하다</td>
+              <td>자극의 알아차림<br>가만히 있기 명상</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="curr-features">
+          <div class="curr-feature">목표: 알아차림이 발생하는 원리 이해</div>
+          <div class="curr-feature">마음의 3가지 움직임을 명상으로 통찰</div>
+          <div class="curr-feature">혜택: 스트레스에 대응하는 능력 발현</div>
+        </div>
+
+        <div class="curr-footer">
+          <div class="curr-provides">
+            1:1 개인 지도 4회<br>
+            1:1 개인 면담 (주 2회)
+          </div>
+          <div class="curr-price">
+            <div class="curr-price-label">가격</div>
+            <div class="curr-price-num">27<span class="curr-price-unit">만원</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 심화 -->
+      <div class="curr-card reveal reveal-delay-2">
+        <div class="curr-card-bg">深</div>
+        <div class="curr-step">콘텐츠 2</div>
+        <div class="curr-title serif">마음의 움직임 심화</div>
+        <div class="curr-subtitle">접촉 중심 마음탐구</div>
+
+        <table class="curr-table">
+          <thead>
+            <tr>
+              <th>회차</th>
+              <th>주제</th>
+              <th>세부 내용</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1회</td>
+              <td>자극의 정체를 느껴보다</td>
+              <td>자극의 정체<br>느끼기<br>자극 느끼기 명상</td>
+            </tr>
+            <tr>
+              <td>2회</td>
+              <td>이제 느끼기만 하세요</td>
+              <td>감지(感知)<br>생각 없는 이해<br>자극 느끼기 명상</td>
+            </tr>
+            <tr>
+              <td>3회</td>
+              <td>마음을 내보이는 자극의 흐름</td>
+              <td>자극의 흐름<br>마음의 이해<br>자극 느끼기 명상</td>
+            </tr>
+            <tr>
+              <td>4회</td>
+              <td>호기심이라는 강력한 무기</td>
+              <td>마음탐구의 동기<br>두 가지 의도<br>자극 차단 명상</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="curr-features">
+          <div class="curr-feature">목표: 마음의 작동 원리 이해</div>
+          <div class="curr-feature">마음의 3가지 움직임을 명상으로 체득</div>
+          <div class="curr-feature">혜택: 마음을 다루어 알아가는 삶</div>
+        </div>
+
+        <div class="curr-footer">
+          <div class="curr-provides">
+            1:1 개인 지도 4회<br>
+            1:1 개인 면담 (주 2회)
+          </div>
+          <div class="curr-price">
+            <div class="curr-price-label">가격</div>
+            <div class="curr-price-num">27<span class="curr-price-unit">만원</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMEND -->
+<section class="recommend">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">콘텐츠 선택 가이드</p>
+      <h2 class="section-title serif">나에게 맞는<br><strong>콘텐츠를 선택하세요</strong></h2>
+    </div>
+    <div class="recommend-grid">
+      <div class="rec-card reveal reveal-delay-1">
+        <div class="rec-card-accent"></div>
+        <div class="rec-if">이런 분께 추천</div>
+        <div class="rec-title serif">생활 스트레스를 관리하려면</div>
+        <div class="rec-arrow">→ <strong>마음의 움직임 기초</strong> 추천</div>
+      </div>
+      <div class="rec-card reveal reveal-delay-2">
+        <div class="rec-card-accent"></div>
+        <div class="rec-if">이런 분께 추천</div>
+        <div class="rec-title serif">마음을 스스로 다루고 싶다면</div>
+        <div class="rec-arrow">→ <strong>마음의 움직임 심화</strong> 추천 <span style="font-size:12px;color:var(--mist);">(기초 수료 필요)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDE -->
+<section class="guide">
+  <div class="container">
+    <div class="guide-inner">
+      <div class="guide-text reveal">
+        <p class="section-label">안내자 소개</p>
+        <h2 class="section-title serif">탐구의 여정을<br><strong>당신과 함께합니다</strong></h2>
+        <p>마음의 능력은 이미 당신 안에 잠재되어 있으며,<br>오로지 자신만이 확인할 수 있습니다<br>마음탐구 안내자는 그 여정을 함께합니다</p>
+      </div>
+      <div class="guide-card reveal reveal-delay-2">
+        <div class="guide-name serif">나공</div>
+        <div class="guide-role">마음탐구 안내자</div>
+        <div class="guide-items">
+          <div class="guide-item">서울불교대학교대학원 명상학 석사 졸업</div>
+          <div class="guide-item">20대부터 마음의 문제 해결법을 찾아 헤맨 경험</div>
+          <div class="guide-item">상담 수련생과 불교 수행을 거쳐 '마음탐구' 정립</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO APPLY -->
+<section class="apply">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">참가 신청 방법</p>
+      <h2 class="section-title serif">세 단계로<br><strong>시작합니다</strong></h2>
+    </div>
+    <div class="apply-steps">
+      <div class="apply-step reveal reveal-delay-1">
+        <div class="as-accent"></div>
+        <div class="as-num serif">01</div>
+        <div class="as-body">
+          <div class="as-title">탐구의 장 참가 신청서 작성</div>
+          <div class="as-desc">아래 버튼을 통해 신청서를 작성해 주세요.</div>
+        </div>
+      </div>
+      <div class="apply-step reveal reveal-delay-2">
+        <div class="as-accent"></div>
+        <div class="as-num serif">02</div>
+        <div class="as-body">
+          <div class="as-title">오픈채팅방 입장</div>
+          <div class="as-desc">신청 후 안내되는 오픈채팅방에 입장합니다.</div>
+        </div>
+      </div>
+      <div class="apply-step reveal reveal-delay-3">
+        <div class="as-accent"></div>
+        <div class="as-num serif">03</div>
+        <div class="as-body">
+          <div class="as-title">Zoom으로 탐구 시작</div>
+          <div class="as-desc">운영 시간에 채팅방에서 Zoom 주소를 확인하고 자유롭게 입장합니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="container">
+    <div class="cta-inner">
+      <p class="section-label reveal">지금 시작하세요</p>
+      <h2 class="cta-title serif reveal reveal-delay-1">
+        탐구의 장에서<br><strong>당신의 성장을 기다립니다</strong>
+      </h2>
+      <p class="cta-sub reveal reveal-delay-2">
+        마음탐구자로 나아갈 수 있도록<br>
+        당신의 발걸음에 맞추어 함께 나아갑니다
+      </p>
+      <div class="reveal reveal-delay-3">
+        <a href="#" class="cta-btn">
+          탐구의 장 참가 신청하기
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+        <div class="cta-note">Zoom 기반 온라인 · 매주 화/수/목/일 20:00–23:00</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo serif">마음탐구연구소</div>
+  <div>마음의 능력을 활용하는 삶으로</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  document.querySelectorAll('a[href="#cta"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector('#cta').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>

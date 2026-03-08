@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마음탐구연구소 — 마음의 능력을 발견하다</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1714;
+    --stone: #3d3830;
+    --ash: #7a7269;
+    --mist: #b8b0a6;
+    --fog: #e8e2db;
+    --paper: #f5f1ec;
+    --cream: #faf7f3;
+    --warm-white: #fefdfc;
+    --accent: #8b6f47;
+    --accent-light: #c4a882;
+    --gold: #c9a84c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+    line-height: 1.8;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .serif { font-family: 'Noto Serif KR', serif; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: multiply;
+  }
+
+  .logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--stone);
+    opacity: 0;
+    animation: fadeIn 1s ease 0.5s forwards;
+  }
+
+  .nav-cta {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-light);
+    padding-bottom: 2px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.7s forwards;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .nav-cta:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 64px 80px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: slideUp 0.8s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 300;
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: slideUp 0.8s ease 0.5s forwards;
+  }
+
+  .hero-title strong {
+    font-weight: 600;
+    display: block;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--ash);
+    line-height: 1.9;
+    max-width: 380px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: slideUp 0.8s ease 0.7s forwards;
+  }
+
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--ink);
+    color: var(--cream);
+    text-decoration: none;
+    padding: 16px 36px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    transition: background 0.3s, transform 0.2s;
+    opacity: 0;
+    animation: slideUp 0.8s ease 0.9s forwards;
+    width: fit-content;
+  }
+  .hero-btn:hover { background: var(--accent); transform: translateY(-1px); }
+  .hero-btn svg { width: 16px; height: 16px; transition: transform 0.3s; }
+  .hero-btn:hover svg { transform: translateX(4px); }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeIn 1.2s ease 0.4s forwards;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #e8ddd0 0%, #d4c8b8 40%, #c9bba8 100%);
+  }
+
+  .hero-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(139,111,71,0.2);
+  }
+  .hero-circle:nth-child(2) {
+    width: 480px; height: 480px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: breathe 6s ease-in-out infinite;
+  }
+  .hero-circle:nth-child(3) {
+    width: 320px; height: 320px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: breathe 6s ease-in-out infinite 1s;
+  }
+  .hero-circle:nth-child(4) {
+    width: 160px; height: 160px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(139,111,71,0.08);
+    animation: breathe 6s ease-in-out infinite 2s;
+  }
+
+  .hero-kanji {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 80px;
+    font-weight: 300;
+    color: var(--accent);
+    opacity: 0.25;
+    letter-spacing: -0.05em;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 120px 0; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 80px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .section-title strong { font-weight: 600; }
+
+  /* ── PROBLEM SECTION ── */
+  .problem {
+    background: var(--warm-white);
+    position: relative;
+  }
+
+  .problem-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .problem-text p {
+    font-size: 16px;
+    color: var(--stone);
+    line-height: 2;
+    margin-bottom: 20px;
+  }
+  .problem-text p:last-child { margin-bottom: 0; }
+
+  .problem-highlight {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.8;
+    padding: 36px 40px;
+    background: var(--paper);
+    border-left: 3px solid var(--accent);
+    position: relative;
+  }
+  .problem-highlight::before {
+    content: '"';
+    font-size: 80px;
+    color: var(--fog);
+    position: absolute;
+    top: -10px; left: 20px;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+
+  /* ── ABILITIES SECTION ── */
+  .abilities {
+    background: var(--cream);
+  }
+
+  .abilities-intro {
+    max-width: 600px;
+    margin-bottom: 80px;
+  }
+
+  .abilities-intro p {
+    font-size: 16px;
+    color: var(--ash);
+    line-height: 2;
+    margin-top: 20px;
+  }
+
+  .abilities-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .ability-card {
+    background: var(--paper);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .ability-card:hover { background: var(--fog); }
+  .ability-card:hover .ability-num { opacity: 0.15; }
+
+  .ability-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 80px;
+    font-weight: 300;
+    color: var(--accent);
+    opacity: 0.07;
+    position: absolute;
+    top: 20px; right: 28px;
+    line-height: 1;
+    transition: opacity 0.3s;
+  }
+
+  .ability-tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent-light);
+    padding: 4px 10px;
+    margin-bottom: 16px;
+  }
+
+  .ability-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .ability-desc {
+    font-size: 14px;
+    color: var(--ash);
+    line-height: 1.9;
+  }
+
+  /* ── MOVEMENTS TABLE ── */
+  .movements {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 120px 0;
+  }
+
+  .movements .container { max-width: 1100px; }
+
+  .movements .section-label { color: var(--accent-light); }
+  .movements .section-title { color: var(--cream); margin-bottom: 60px; }
+
+  .movements-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+
+  .movement-group {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 40px;
+  }
+
+  .movement-group-title {
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .movement-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .movement-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .movement-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--accent-light);
+    opacity: 0.5;
+    min-width: 36px;
+    line-height: 1.2;
+  }
+
+  .movement-content {}
+  .movement-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+  .movement-explain {
+    font-size: 13px;
+    color: var(--mist);
+    line-height: 1.7;
+  }
+
+  /* ── MEDITATION SECTION ── */
+  .meditation {
+    background: var(--paper);
+  }
+
+  .meditation-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-bottom: 80px;
+  }
+
+  .meditation-steps {
+    counter-reset: steps;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .meditation-step {
+    display: flex;
+    gap: 28px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--fog);
+    position: relative;
+    overflow: hidden;
+    transition: padding-left 0.3s;
+  }
+  .meditation-step:first-child { border-top: 1px solid var(--fog); }
+  .meditation-step:hover { padding-left: 12px; }
+  .meditation-step:hover .med-accent { width: 4px; }
+
+  .med-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+
+  .med-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--fog);
+    min-width: 40px;
+    line-height: 1.2;
+  }
+
+  .med-body {}
+  .med-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .med-subtitle {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .med-desc {
+    font-size: 14px;
+    color: var(--ash);
+    line-height: 1.9;
+  }
+
+  /* ── JOURNEY ── */
+  .journey {
+    background: var(--warm-white);
+  }
+
+  .journey-inner {
+    display: grid;
+    grid-template-columns: 5fr 4fr;
+    gap: 100px;
+    align-items: center;
+  }
+
+  .journey-text p {
+    font-size: 16px;
+    color: var(--stone);
+    line-height: 2;
+    margin-bottom: 20px;
+  }
+
+  .journey-text .big-quote {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.8;
+    color: var(--ink);
+    margin: 40px 0;
+  }
+
+  .journey-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .journey-card {
+    padding: 24px 28px;
+    border: 1px solid var(--fog);
+    background: var(--cream);
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .journey-card:hover { border-color: var(--accent-light); transform: translateX(8px); }
+
+  .jc-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .jc-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .jc-text {
+    font-size: 13px;
+    color: var(--ash);
+    line-height: 1.7;
+  }
+
+  /* ── CTA ── */
+  .cta {
+    background: linear-gradient(160deg, #2c2822 0%, #1a1714 50%, #232018 100%);
+    color: var(--cream);
+    padding: 140px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta::before {
+    content: '心';
+    position: absolute;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 600px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.02);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .cta-inner { position: relative; z-index: 2; }
+
+  .cta .section-label { color: var(--accent-light); margin-bottom: 24px; }
+
+  .cta-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--cream);
+    margin-bottom: 20px;
+  }
+  .cta-title strong { font-weight: 600; color: #e8d8c4; }
+
+  .cta-sub {
+    font-size: 16px;
+    color: var(--mist);
+    line-height: 1.9;
+    max-width: 480px;
+    margin: 0 auto 56px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--accent);
+    color: var(--cream);
+    text-decoration: none;
+    padding: 20px 52px;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    margin-bottom: 20px;
+  }
+  .cta-btn:hover {
+    background: #a07848;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(139,111,71,0.3);
+  }
+  .cta-note {
+    font-size: 12px;
+    color: var(--ash);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--ash);
+    padding: 48px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .footer-logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    color: var(--fog);
+    font-weight: 400;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 100px 40px 60px; }
+    .hero-right { height: 320px; }
+    .container { padding: 0 40px; }
+    .problem-inner,
+    .meditation-intro,
+    .journey-inner,
+    .movements-grid { grid-template-columns: 1fr; gap: 48px; }
+    .abilities-grid { grid-template-columns: 1fr; }
+    nav { padding: 20px 32px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; padding: 40px; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-title { font-size: 34px; }
+    .container { padding: 0 24px; }
+    section { padding: 80px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo serif">마음탐구연구소</div>
+  <a href="#cta" class="nav-cta">탐구의 장 둘러보기 →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">마음탐구연구소</p>
+    <h1 class="hero-title serif">
+      마음의 능력은<br>
+      <strong>이미 당신 안에</strong><br>
+      <em>있습니다</em>
+    </h1>
+    <p class="hero-sub">
+      새로운 방법을 찾아 헤매던 여정이,<br>
+      자기 자신에게 귀의하는 여정으로 바뀝니다
+    </p>
+    <a href="#cta" class="hero-btn">
+      탐구의 장 둘러보기
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 8h10M9 4l4 4-4 4"/>
+      </svg>
+    </a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-bg"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-kanji">心</div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <div class="problem-inner">
+      <div class="problem-text reveal">
+        <p class="section-label">문제의 시작</p>
+        <h2 class="section-title serif">아직도 방법을 찾아<br><strong>헤매고 있지 않나요?</strong></h2>
+        <p>명상을 꾸준히 해보거나<br>심리와 관련된 책을 읽어도 보고<br>유튜브에서 영상도 찾아보았지만</p>
+        <p>어느 순간 다시 막히게 되지 않나요?</p>
+        <p>이건 당신의 <strong>의지가 부족해서가 아닙니다</strong><br>단지 방향이 조금 틀어져 있었을 뿐입니다</p>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="problem-highlight serif">
+          마음으로 고민하던 과정이<br>어떻게 해야 하는지<br>걱정하는 과정으로 나아갑니다
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABILITIES -->
+<section class="abilities">
+  <div class="container">
+    <div class="abilities-intro reveal">
+      <p class="section-label">이미 안에 있는 것</p>
+      <h2 class="section-title serif">마음을 다루는 능력은<br><strong>이미 당신 안에 있습니다</strong></h2>
+      <p>화가 치밀어 오르다 자연스럽게 가라앉는 순간<br>괴로운 생각이 반복되다 문득 이유를 알아차리는 순간<br>이미 경험해 본 적이 있지 않나요?</p>
+      <p style="margin-top:20px;">당신은 지금도 마음의 능력을 사용하고 있습니다<br>다만 <strong>의식적으로 활용하지 못하고 있을 뿐</strong>입니다</p>
+    </div>
+    <div class="abilities-grid">
+      <div class="ability-card reveal reveal-delay-1">
+        <div class="ability-num">1</div>
+        <div class="ability-tag">1단계</div>
+        <div class="ability-name serif">감각 기반 알아차림</div>
+        <div class="ability-desc">괴로운 생각이나 감정에 휘둘리지 않는 상태로 나아가는 능력</div>
+      </div>
+      <div class="ability-card reveal reveal-delay-2">
+        <div class="ability-num">2</div>
+        <div class="ability-tag">2단계</div>
+        <div class="ability-name serif">접촉 중심 마음탐구</div>
+        <div class="ability-desc">마음과 접촉하여 그 심층적인 부분을 직접 탐구해 나가는 능력</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOVEMENTS -->
+<section class="movements">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">마음의 패턴</p>
+      <h2 class="section-title serif">마음의 <strong>7가지 움직임</strong>을<br>내 안에서 발견하다</h2>
+    </div>
+    <div class="movements-grid">
+      <div class="movement-group reveal reveal-delay-1">
+        <div class="movement-group-title">감각 기반 알아차림 — 1·2·3 단계</div>
+        <div class="movement-item">
+          <div class="movement-num">1</div>
+          <div class="movement-content">
+            <div class="movement-name serif">나타남</div>
+            <div class="movement-explain">마음은 불현듯이 나타난다</div>
+          </div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-num">2</div>
+          <div class="movement-content">
+            <div class="movement-name serif">반응</div>
+            <div class="movement-explain">마음은 반응을 불러일으킨다</div>
+          </div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-num">3</div>
+          <div class="movement-content">
+            <div class="movement-name serif">존재감</div>
+            <div class="movement-explain">마음은 존재감을 드러낸다</div>
+          </div>
+        </div>
+      </div>
+      <div class="movement-group reveal reveal-delay-2">
+        <div class="movement-group-title">접촉 중심 마음탐구 — 4·5·6·7 단계</div>
+        <div class="movement-item">
+          <div class="movement-num">4</div>
+          <div class="movement-content">
+            <div class="movement-name serif">정체</div>
+            <div class="movement-explain">마음을 느껴 어떤 느낌인지 알 수 있다</div>
+          </div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-num">5</div>
+          <div class="movement-content">
+            <div class="movement-name serif">흐름</div>
+            <div class="movement-explain">마음은 일련의 흐름으로 나타난다</div>
+          </div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-num">6</div>
+          <div class="movement-content">
+            <div class="movement-name serif">감지</div>
+            <div class="movement-explain">마음의 흐름을 느껴 마음을 알 수 있다</div>
+          </div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-num">7</div>
+          <div class="movement-content">
+            <div class="movement-name serif">사라짐</div>
+            <div class="movement-explain">마음을 차단하면 점차 사라진다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="text-align:center; margin-top:64px;">
+      <p class="problem-highlight serif" style="display:inline-block;font-size:20px;">마음의 움직임을 발견하는 순간<br>마음의 능력을 발휘할 수 있게 됩니다</p>
+    </div>
+  </div>
+</section>
+
+<!-- MEDITATION -->
+<section class="meditation">
+  <div class="container">
+    <div class="meditation-intro">
+      <div class="reveal">
+        <p class="section-label">세 가지 명상</p>
+        <h2 class="section-title serif">마음의 움직임을<br><strong>발견하는 명상들</strong></h2>
+        <p style="font-size:15px;color:var(--ash);line-height:2;margin-top:20px;">마음의 움직임을 발견하기 위해 주로 세 가지 명상을 활용합니다<br>각 단계를 통과하여 마음을 알아가는 <strong>마음탐구자</strong>로 성장하게 됩니다</p>
+      </div>
+      <div></div>
+    </div>
+    <div class="meditation-steps">
+      <div class="meditation-step reveal">
+        <div class="med-accent"></div>
+        <div class="med-num serif">01</div>
+        <div class="med-body">
+          <div class="med-subtitle">알아차림 기초</div>
+          <div class="med-title serif">호흡 명상</div>
+          <div class="med-desc">호흡에 주의를 두면 생각과 감정이 불현듯 나타나는 순간을 발견하게 됩니다</div>
+        </div>
+      </div>
+      <div class="meditation-step reveal reveal-delay-1">
+        <div class="med-accent"></div>
+        <div class="med-num serif">02</div>
+        <div class="med-body">
+          <div class="med-subtitle">알아차림 활용</div>
+          <div class="med-title serif">가만히 있기 명상</div>
+          <div class="med-desc">조용히 머물러 있으면서 떠오르는 생각과 감정의 존재감을 알아차립니다</div>
+        </div>
+      </div>
+      <div class="meditation-step reveal reveal-delay-2">
+        <div class="med-accent"></div>
+        <div class="med-num serif">03</div>
+        <div class="med-body">
+          <div class="med-subtitle">마음탐구 활용</div>
+          <div class="med-title serif">자극 느끼기 명상</div>
+          <div class="med-desc">마음에서 일어나는 모든 것을 탐구의 재료로 삼아 마음을 탐구하게 됩니다</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="journey">
+  <div class="container">
+    <div class="journey-inner">
+      <div class="journey-text reveal">
+        <p class="section-label" style="font-size:18px;">마음탐구자의 삶</p>
+        <h2 class="section-title serif" style="font-size:clamp(22px,3vw,34px);">특정한 장소도<br>특정한 시간도<br><strong>필요 없습니다</strong></h2>
+        <p>삶 자체가 마음을 탐구하는 장소가 됩니다</p>
+        <div class="big-quote serif">
+          마음으로 괴로워하는 대신<br>마음을 이해하며 다룰 수 있게 됩니다
+        </div>
+        <p>이 변화는 단순히 마음이 편안해지는 데서 끝나지 않습니다<br>삶의 시련 앞에서 쉽게 무너지지 않는 내면의 힘으로 이어집니다</p>
+      </div>
+      <div class="journey-visual reveal reveal-delay-2">
+        <div class="journey-card">
+          <div class="jc-icon">💬</div>
+          <div class="jc-title">대화하는 순간에도</div>
+          <div class="jc-text">관계 속에서 일어나는 마음을 이해하고 다룰 수 있습니다</div>
+        </div>
+        <div class="journey-card">
+          <div class="jc-icon">🚶</div>
+          <div class="jc-title">혼자 걷는 순간에도</div>
+          <div class="jc-text">일상의 모든 순간이 마음을 탐구하는 기회가 됩니다</div>
+        </div>
+        <div class="journey-card">
+          <div class="jc-icon">🌿</div>
+          <div class="jc-title">지치고 무너지는 순간에도</div>
+          <div class="jc-text">쉽게 무너지지 않는 내면의 힘이 생겨납니다</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="container">
+    <div class="cta-inner">
+      <p class="section-label reveal">탐구의 장</p>
+      <h2 class="cta-title serif reveal reveal-delay-1">
+        발견은 누구도<br><strong>대신해 줄 수 없습니다</strong>
+      </h2>
+      <p class="cta-sub reveal reveal-delay-2">
+        마음의 능력은 이미 당신 안에 잠재되어 있으며,<br>
+        오로지 자신만이 확인할 수 있습니다<br>
+        마음탐구연구소는 그 탐구의 여정을 함께합니다
+      </p>
+      <div class="reveal reveal-delay-3">
+        <a href="#" class="cta-btn">
+          탐구의 장 둘러보기
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+        <div class="cta-note">Zoom 기반 온라인 탐구 공간</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo serif">마음탐구연구소</div>
+  <div>마음의 능력을 발견하는 여정</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Smooth scroll for nav CTA
+  document.querySelectorAll('a[href="#cta"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector('#cta').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
